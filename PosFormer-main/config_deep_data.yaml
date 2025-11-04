@@ -1,0 +1,55 @@
+seed_everything: 42
+trainer:
+  checkpoint_callback: true
+  callbacks:
+    - class_path: pytorch_lightning.callbacks.LearningRateMonitor
+      init_args:
+        logging_interval: epoch
+    - class_path: pytorch_lightning.callbacks.ModelCheckpoint
+      init_args:
+        save_top_k: 16
+        monitor: val_ExpRate
+        mode: max
+        filename: '{epoch}-{step}-{val_ExpRate:.4f}'
+  default_root_dir: 'lightning_logs/version_deeplearning_data_1'
+  gpus: 16
+  accelerator: ddp
+  check_val_every_n_epoch: 2   # 每 2 个 epoch 验证一次，增加检验数据的验证频次
+  max_epochs: 100
+  deterministic: true
+  num_sanity_val_steps: 0
+  precision: 16               # mixed precision 可提速并有时改善泛化
+  gradient_clip_val: 1.0      # 防止不稳定
+  accumulate_grad_batches: 1  # 若想保持与单卡相同的 effective batch，可调整此项
+model:
+  d_model: 256
+  # encoder
+  growth_rate: 24
+  num_layers: 16
+  # decoder
+  nhead: 8
+  num_decoder_layers: 3 # 增加 decoder 层数以提升模型容量
+  # 层次太深，难以学习特征，适当减小 num_decoder_layers 维度
+  dim_feedforward: 1024
+  dropout: 0.3    # 0.3 → 0.5 增加 dropout 防止过拟合
+  # 正则化过高，会降低 ExpRate，适当减小 dropout
+  dc: 32
+  cross_coverage: true
+  self_coverage: true
+  # beam search
+  beam_size: 5
+  max_len: 200
+  alpha: 1.0    # 控制对于长序列的偏好
+  early_stopping: false
+  temperature: 1.0
+  # training
+  # learning_rate: 2e-3 # 3e-4 → 2e-3 提高学习率以加快收敛
+  # 使用 SGD 进行测试，learning_rate 为 原论文的 0.08
+  learning_rate: 8e-2
+  patience: 12
+data:
+  zipfile_path: deeplearning_dataset.zip
+  train_batch_size: 16
+  eval_batch_size: 8
+  num_workers: 30
+  scale_aug: True   # 开启数据增强 → ExpRate 提升约 5 %
