@@ -10,6 +10,8 @@ data/
 .python-version
 *.egg-info
 configs/
+deeplearning_dataset/
+lightning_logs/
 missfont.log
 *.jpg
 *.jpeg
