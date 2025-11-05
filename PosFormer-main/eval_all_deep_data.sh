@@ -16,14 +16,14 @@ echo "--- 开始评估模型版本: $VERSION ---"
 echo "--- 使用 GPU 数量: $GPUS ---"
 
 # 遍历 'val' 和 'test' 数据集进行评估
-for DATA_SPLIT in 'val' 'test'
+for DATA_SPLIT in 'test'
 do
     echo 
     echo "**************** 开始评估数据集: $DATA_SPLIT ****************"
     
     # --- 修改核心: 直接调用我们修改好的 test.py 脚本 ---
     python scripts/test/test.py \
-        --path "$VERSION" \
+        --path  "$VERSION" \
         --data-split "$DATA_SPLIT" \
         --gpus "$GPUS"
         
