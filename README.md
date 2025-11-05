@@ -69,6 +69,7 @@ Correct <= 3 errors: 81.74%
 ```
 ### SGD_train_loss
 <img src = "实验_logger_image/SGD_train_loss_image.png">
+
 - version_6:以 学习率`2e-3`，开启`数据增强`,进行`Epoch:200`训练;
 ```
 val_Exprate : 52.12%

@@ -14,21 +14,10 @@
 
 ### Installation
 ```bash
-cd PosFormer
+cd PosFormer-main
 
-# 创建 conda 环境并安装依赖
-conda create -y -n PosFormer python=3.8
-conda activate PosFormer
-conda install pytorch=1.8.1 torchvision=0.2.2 cudatoolkit=11.1 pillow=8.4.0 -c pytorch -c nvidia
-
-# 安装训练所需依赖
-conda install pytorch-lightning=1.4.9 torchmetrics=0.6.0 -c conda-forge
-
-# 安装评估所需依赖
-conda install pandoc=1.19.2.1 -c conda-forge
-
-# pip 安装依赖
-pip  install typer jsonargparse[signatures] torseborad einops torchvision pillow 
+# install project   
+conda env create -n PosFormer -f environment.yml
 ```
 ### 数据准备
 数据集结构如下:
@@ -55,7 +44,7 @@ pip  install typer jsonargparse[signatures] torseborad einops torchvision pillow
 
 ### 开始训练
 ```bash
-cd PosFormer
+cd PosFormer-main
 python train.py --config config.yaml
 ```
 
