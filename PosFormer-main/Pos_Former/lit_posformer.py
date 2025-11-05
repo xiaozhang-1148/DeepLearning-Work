@@ -246,20 +246,20 @@ class LitPosFormer(pl.LightningModule):
         可通过注释切换来对比 AdamW 和 SGD。
         """
         # --- 1. 选择你的优化器 ---
-        # 方案 A: AdamW (更常用，通常效果更好)
-        # optimizer = torch.optim.AdamW(
-        #     self.parameters(),
-        #     lr=self.hparams.learning_rate, # 对于 AdamW，一个好的初始值是 1e-4 或 3e-4
-        #     weight_decay=1e-4
-        # )
-        
-        # 方案 B: SGD (需要更精细的调度策略)
-        optimizer = torch.optim.SGD(
+        # 方案 A: AdamW (更常用，通常效果更好)  →  AdamW 经过 100 epoch，准确率为 59.87 %
+        optimizer = torch.optim.AdamW(
             self.parameters(),
-            lr=self.hparams.learning_rate,
-            momentum=0.9,
+            lr = self.hparams.learning_rate,
             weight_decay=1e-4
         )
+        
+        # 方案 B: SGD (需要更精细的调度策略) →  SGD 经过 300 epoch，准确率为 54.33 %
+        # optimizer = torch.optim.SGD(
+        #     self.parameters(),
+        #     lr=self.hparams.learning_rate,
+        #     momentum=0.9,
+        #     weight_decay=1e-4
+        # )
 
         # --- 2. 配置学习率调度器 (使用线性热身 + 余弦退火) ---
         try:

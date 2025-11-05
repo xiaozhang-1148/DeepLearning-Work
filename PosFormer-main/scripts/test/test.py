@@ -1,5 +1,9 @@
-import os
+
 import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parents[2]))  # 指向项目根目录
+
+import os
 import typer
 import zipfile
 from Pos_Former.datamodule import CROHMEDatamodule
@@ -97,7 +101,7 @@ def main(
                 lines = f.readlines()
                 if len(lines) < 2:
                     continue
-                pred_string = lines[1].decode('utf-8').strip()
+                pred_string = lines[1].decode('utf-8').strip().replace('$', '')
                 if file_name in caption:
                     caption_string = caption[file_name]
                 else:

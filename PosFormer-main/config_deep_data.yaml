@@ -15,7 +15,7 @@ trainer:
   gpus: 16
   accelerator: ddp
   check_val_every_n_epoch: 2   # 每 2 个 epoch 验证一次，增加检验数据的验证频次
-  max_epochs: 100
+  max_epochs: 300             # 使用 SGD 训练时，适当增加训练轮数, 100 Epoch，完成训练时，Loss还处于上升期
   deterministic: true
   num_sanity_val_steps: 0
   precision: 16               # mixed precision 可提速并有时改善泛化
@@ -28,7 +28,7 @@ model:
   num_layers: 16
   # decoder
   nhead: 8
-  num_decoder_layers: 3 # 增加 decoder 层数以提升模型容量
+  num_decoder_layers: 3 # 增加 decoder 层数以提升模型容量 【version_3】
   # 层次太深，难以学习特征，适当减小 num_decoder_layers 维度
   dim_feedforward: 1024
   dropout: 0.3    # 0.3 → 0.5 增加 dropout 防止过拟合
@@ -43,9 +43,9 @@ model:
   early_stopping: false
   temperature: 1.0
   # training
-  # learning_rate: 2e-3 # 3e-4 → 2e-3 提高学习率以加快收敛
-  # 使用 SGD 进行测试，learning_rate 为 原论文的 0.08
-  learning_rate: 8e-2
+  learning_rate: 2e-3 # 3e-4 → 2e-3 提高学习率以加快收敛
+  # 使用 SGD 进行测试，learning_rate 为 原论文的 0.08.  →  经过300 epoch，准确率为 54.33 %
+  # learning_rate: 8e-2
   patience: 12
 data:
   zipfile_path: deeplearning_dataset.zip
