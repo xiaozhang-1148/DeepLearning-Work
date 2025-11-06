@@ -13,6 +13,9 @@ configs/
 deeplearning_dataset/
 lightning_logs/
 missfont.log
+HME100K_Dataset.zip
+results.zip
+HME100k/
 *.jpg
 *.jpeg
 *.jpe
