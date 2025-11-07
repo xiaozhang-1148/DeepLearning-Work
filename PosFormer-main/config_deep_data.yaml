@@ -12,7 +12,7 @@ trainer:
         mode: max
         filename: '{epoch}-{step}-{val_ExpRate:.4f}'
   default_root_dir: 'lightning_logs/version_deeplearning_data_1'
-  gpus: 16
+  gpus: 1
   accelerator: ddp
   check_val_every_n_epoch: 2   # 每 2 个 epoch 验证一次，增加检验数据的验证频次
   max_epochs: 300             # 使用 SGD 训练时，适当增加训练轮数, 100 Epoch，完成训练时，Loss还处于上升期

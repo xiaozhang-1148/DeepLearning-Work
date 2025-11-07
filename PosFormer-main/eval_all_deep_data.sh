@@ -1,32 +1,39 @@
 #!/bin/bash
 
-# 检查是否提供了模型版本号
 if [ -z "$1" ]; then
-    echo "错误: 请提供模型版本号作为第一个参数。"
-    echo "用法: bash eval_all_deep_data.sh <version_name> [num_gpus]"
+    echo "错误: 请提供模型检查点文件(.ckpt)或其所在目录的路径。"
+    echo "用法: bash eval_all_deep_data.sh <path_to_ckpt_or_dir> [num_gpus]"
     exit 1
 fi
 
-# 从命令行参数获取版本号和 GPU 数量
-VERSION=$1
-# 如果没有提供第二个参数（GPU数量），则默认为 1
+# 从命令行参数获取路径和 GPU 数量（第二个参数默认1）
+INPUT_PATH=$1
 GPUS=${2:-1}
 
-echo "--- 开始评估模型版本: $VERSION ---"
+# 如果传入的是一个文件，则取其所在的目录作为 --path 的值
+# 否则，直接使用传入的目录路径
+if [ -f "$INPUT_PATH" ]; then
+    CKPT_DIR=$(dirname "$INPUT_PATH")
+else
+    CKPT_DIR=$INPUT_PATH
+fi
+
+echo "--- 开始评估模型，检查点目录: $CKPT_DIR ---"
 echo "--- 使用 GPU 数量: $GPUS ---"
 
-# 遍历 'val' 和 'test' 数据集进行评估
+# 遍历需要评估的数据集（可根据需求扩展为 'test/easy' 'test/medium' 'test/hard'）
 for DATA_SPLIT in 'test'
 do
     echo 
     echo "**************** 开始评估数据集: $DATA_SPLIT ****************"
     
-    # --- 修改核心: 直接调用我们修改好的 test.py 脚本 ---
+    # 调用 test.py，参数保持正确映射
     python scripts/test/test.py \
-        --path  "$VERSION" \
+        --path "$CKPT_DIR" \
         --data-split "$DATA_SPLIT" \
-        --gpus "$GPUS"
-        
+        --gpus "$GPUS" \
+        --dataset-zip "deeplearning_dataset.zip"
+    
     echo "**************** 数据集评估完成: $DATA_SPLIT ****************"
 done
 

@@ -1,4 +1,3 @@
-
 import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parents[2]))  # 指向项目根目录
@@ -9,6 +8,7 @@ import zipfile
 from Pos_Former.datamodule import CROHMEDatamodule
 from Pos_Former.lit_posformer import LitPosFormer
 from pytorch_lightning import Trainer, seed_everything
+from typing import Optional
 
 seed_everything(42)
 
@@ -33,19 +33,13 @@ def cal_distance(word1, word2):
     return dp[m][n]
 
 def main(
-    path: str = "deeplearning_data", 
-    data_split: str = "test",
-    gpus: int = 1,
-    dataset_zip: str = "deeplearning_dataset.zip"
+    path: str = typer.Option(..., "--path", "-p", help="包含 .ckpt 文件的模型检查点文件夹路径。"),
+    data_split: str = typer.Option("test", "--data-split", help="要预测的数据划分。"),
+    gpus: int = typer.Option(1, "--gpus", help="使用的 GPU 数量。"),
+    dataset_zip: str = typer.Option("HME100K_Dataset.zip", "--dataset-zip", help="数据集 zip 文件的路径。")
 ):
     """
     对指定的模型版本和数据集划分进行测试和评估。
-
-    Args:
-        version (str): 模型的版本名称 (例如 'deeplearning_data')。
-        data_split (str): 要测试的数据集划分名称 (例如 'test', 'val')。
-        gpus (int): 使用的 GPU 数量。
-        dataset_zip (str): 数据集 zip 文件的路径。
     """
     # 动态构建检查点路径
     ckp_folder = path
@@ -66,7 +60,7 @@ def main(
     dm = CROHMEDatamodule(
         zipfile_path=dataset_zip,
         eval_batch_size=1,
-        num_workers=4
+        num_workers=16
     )
 
     model = LitPosFormer.load_from_checkpoint(ckp_path)

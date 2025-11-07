@@ -11,7 +11,8 @@ data/
 *.egg-info
 configs/
 deeplearning_dataset/
-lightning_logs/
+version_deeplearning_data_1/
+version_HME100K_dataset/
 missfont.log
 HME100K_Dataset.zip
 results.zip
