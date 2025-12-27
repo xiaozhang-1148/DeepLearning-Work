@@ -1,0 +1,1 @@
+/home/baoquan/ocr-process/deep_learning_work/PosFormer-main/lightning_logs/best_version/lightning_logs/version_best/checkpoints/epoch=97-step=3037-val_ExpRate=0.5817.ckpt filter=lfs diff=lfs merge=lfs -text
